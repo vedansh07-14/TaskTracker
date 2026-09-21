@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": "eas-cli",
+    "version": ">= 12.0.0",
     "appVersionSource": "remote"
   },
   "build": {
