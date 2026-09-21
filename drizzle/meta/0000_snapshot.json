@@ -1,0 +1,84 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "tables": {
+    "task": {
+      "name": "task",
+      "columns": {
+        "id": { "name": "id", "type": "text", "primaryKey": true, "notNull": true, "autoincrement": false },
+        "title": { "name": "title", "type": "text", "primaryKey": false, "notNull": true, "autoincrement": false },
+        "category": { "name": "category", "type": "text", "primaryKey": false, "notNull": false, "autoincrement": false },
+        "plannedMinutes": { "name": "plannedMinutes", "type": "integer", "primaryKey": false, "notNull": false, "autoincrement": false },
+        "recurrenceRule": { "name": "recurrenceRule", "type": "text", "primaryKey": false, "notNull": false, "autoincrement": false },
+        "defaultStartTime": { "name": "defaultStartTime", "type": "text", "primaryKey": false, "notNull": false, "autoincrement": false },
+        "active": { "name": "active", "type": "integer", "primaryKey": false, "notNull": false, "autoincrement": false, "default": 1 },
+        "createdAt": { "name": "createdAt", "type": "integer", "primaryKey": false, "notNull": false, "autoincrement": false }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "occurrence": {
+      "name": "occurrence",
+      "columns": {
+        "id": { "name": "id", "type": "text", "primaryKey": true, "notNull": true, "autoincrement": false },
+        "taskId": { "name": "taskId", "type": "text", "primaryKey": false, "notNull": true, "autoincrement": false },
+        "scheduledDate": { "name": "scheduledDate", "type": "text", "primaryKey": false, "notNull": true, "autoincrement": false },
+        "scheduledStart": { "name": "scheduledStart", "type": "integer", "primaryKey": false, "notNull": true, "autoincrement": false },
+        "scheduledEnd": { "name": "scheduledEnd", "type": "integer", "primaryKey": false, "notNull": false, "autoincrement": false },
+        "notificationId": { "name": "notificationId", "type": "text", "primaryKey": false, "notNull": false, "autoincrement": false }
+      },
+      "indexes": {
+        "uq_task_date": { "name": "uq_task_date", "columns": ["taskId", "scheduledDate"], "isUnique": true },
+        "idx_scheduled_date": { "name": "idx_scheduled_date", "columns": ["scheduledDate"], "isUnique": false }
+      },
+      "foreignKeys": {
+        "occurrence_taskId_task_id_fk": {
+          "name": "occurrence_taskId_task_id_fk",
+          "tableFrom": "occurrence",
+          "tableTo": "task",
+          "columnsFrom": ["taskId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "completionLog": {
+      "name": "completionLog",
+      "columns": {
+        "id": { "name": "id", "type": "text", "primaryKey": true, "notNull": true, "autoincrement": false },
+        "occurrenceId": { "name": "occurrenceId", "type": "text", "primaryKey": false, "notNull": true, "autoincrement": false },
+        "status": { "name": "status", "type": "text", "primaryKey": false, "notNull": true, "autoincrement": false },
+        "actualStart": { "name": "actualStart", "type": "integer", "primaryKey": false, "notNull": false, "autoincrement": false },
+        "actualEnd": { "name": "actualEnd", "type": "integer", "primaryKey": false, "notNull": false, "autoincrement": false },
+        "completedAt": { "name": "completedAt", "type": "integer", "primaryKey": false, "notNull": true, "autoincrement": false }
+      },
+      "indexes": {
+        "idx_completion_occurrence": { "name": "idx_completion_occurrence", "columns": ["occurrenceId"], "isUnique": false }
+      },
+      "foreignKeys": {
+        "completionLog_occurrenceId_occurrence_id_fk": {
+          "name": "completionLog_occurrenceId_occurrence_id_fk",
+          "tableFrom": "completionLog",
+          "tableTo": "occurrence",
+          "columnsFrom": ["occurrenceId"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  }
+}
