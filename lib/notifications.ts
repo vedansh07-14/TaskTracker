@@ -151,6 +151,7 @@ export async function scheduleOccurrenceNotification(
   priority?: string | null,
   durationMinutes?: number | null
 ): Promise<string | null> {
+  if (Platform.OS === 'web') return null;
   const now = Date.now();
 
   // Don't schedule notifications for past occurrences
@@ -247,6 +248,7 @@ export async function scheduleCompletionNotification(
  * then reschedule them with the OS. Used after task edit.
  */
 export async function rescheduleForTask(taskId: string): Promise<void> {
+  if (Platform.OS === 'web') return;
   const now = Date.now();
 
   // Get all future occurrences for this task
@@ -292,6 +294,7 @@ export async function rescheduleForTask(taskId: string): Promise<void> {
  * Cancel all notifications for a task (used before deletion).
  */
 export async function cancelAllForTask(taskId: string): Promise<void> {
+  if (Platform.OS === 'web') return;
   const occurrences = await db
     .select()
     .from(occurrence)
