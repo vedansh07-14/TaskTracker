@@ -9,7 +9,7 @@
     "web": "expo start --web",
     "build:web": "expo export --platform web",
     "lint": "expo lint",
-    "prebuild": "expo prebuild",
+    "prebuild": "expo prebuild --no-install",
     "generate": "drizzle-kit generate"
   },
   "dependencies": {
