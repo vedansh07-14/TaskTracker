@@ -16,7 +16,7 @@ async function getSqlDb() {
         // Try to load persisted database from localStorage
         let dbInstance: any = null;
         try {
-          const saved = typeof window !== 'undefined' ? localStorage.getItem('cadence_sqlite_db') : null;
+          const saved = typeof window !== 'undefined' && window.localStorage ? window.localStorage.getItem('cadence_sqlite_db') : null;
           if (saved) {
             const binaryArray = new Uint8Array(JSON.parse(saved));
             dbInstance = new SQL.Database(binaryArray);
@@ -120,10 +120,10 @@ export const db = drizzle(
       if (method === 'run') {
         sdb.run(sqlStr, params);
         // Persist on mutations
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && window.localStorage) {
           try {
             const data = sdb.export();
-            localStorage.setItem('cadence_sqlite_db', JSON.stringify(Array.from(data)));
+            window.localStorage.setItem('cadence_sqlite_db', JSON.stringify(Array.from(data)));
           } catch (e) {}
         }
         return { rows: [] };
@@ -140,13 +140,14 @@ export const db = drizzle(
       // Persist on write mutations that might use all/get
       if (
         typeof window !== 'undefined' &&
+        window.localStorage &&
         (sqlStr.trim().toUpperCase().startsWith('INSERT') ||
           sqlStr.trim().toUpperCase().startsWith('UPDATE') ||
           sqlStr.trim().toUpperCase().startsWith('DELETE'))
       ) {
         try {
           const data = sdb.export();
-          localStorage.setItem('cadence_sqlite_db', JSON.stringify(Array.from(data)));
+          window.localStorage.setItem('cadence_sqlite_db', JSON.stringify(Array.from(data)));
         } catch (e) {}
       }
 
